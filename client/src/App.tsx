@@ -1,5 +1,6 @@
 import { useEffect, useState, ChangeEvent } from "react";
 import "./App.css";
+import { Api } from "./api";
 
 function App() {
   const [file, setFile] = useState<File>();
@@ -10,13 +11,8 @@ function App() {
   }, []);
 
   async function fetchImages() {
-    // TODO: Change to get list of image urls from server
-    return [
-      "https://placehold.co/400",
-      "https://placehold.co/400",
-      "https://placehold.co/400",
-      "https://placehold.co/400",
-    ];
+    const response = await new Api().api.imageList();
+    return response.data;
   }
 
   function fileChange(e: ChangeEvent<HTMLInputElement>) {
@@ -24,7 +20,7 @@ function App() {
   }
 
   async function submit() {
-    // TODO: Post the image from `file` variable to server
+    await new Api().api.imageCreate({ file });
     await fetchImages();
   }
 
@@ -39,7 +35,7 @@ function App() {
       <div className="carousel rounded-box">
         {images.map((image, index) => (
           <div key={index} className="carousel-item">
-            <img src="https://placehold.co/400" />
+            <img src={image} />
           </div>
         ))}
       </div>
